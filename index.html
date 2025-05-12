@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Indoor Scene Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 50px;
+        }
+
+        .container {
+            width: 80%;
+            max-width: 600px;
+            text-align: center;
+        }
+
+        input {
+            width: 80%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .output-images {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        img {
+            width: 30%;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>🧠 Zero-Shot Indoor Scene Generator</h1>
+        <p>Enter a description of your indoor scene below:</p>
+        
+        <input type="text" id="scenePrompt" placeholder="e.g. A cozy living room with bookshelves">
+        <button onclick="generateScene()">Generate Scene</button>
+
+        <div class="output-images" id="outputImages"></div>
+    </div>
+
+    <script>
+        async function generateScene() {
+            const prompt = document.getElementById("scenePrompt").value;
+            const outputDiv = document.getElementById("outputImages");
+            
+            // Clear previous images
+            outputDiv.innerHTML = "";
+
+            if (!prompt) {
+                alert("Please enter a scene description!");
+                return;
+            }
+
+            // Show loading (temporary)
+            outputDiv.innerHTML = "<p>Loading...</p>";
+
+            try {
+                // Make the request to your Colab backend here
+                // Change this URL to your ngrok/colab endpoint once we set it up
+                const response = await fetch('YOUR_COLAB_URL', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ prompt: prompt })
+                });
+                
+                const data = await response.json();
+
+                // Assuming your response has 3 images in the 'images' field
+                data.images.forEach(imgUrl => {
+                    const img = document.createElement("img");
+                    img.src = imgUrl;
+                    outputDiv.appendChild(img);
+                });
+            } catch (error) {
+                console.error("Error generating scene:", error);
+                outputDiv.innerHTML = "<p>Sorry, something went wrong.</p>";
+            }
+        }
+    </script>
+
+</body>
+</html>
