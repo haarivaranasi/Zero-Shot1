@@ -1,0 +1,6 @@
+# Ignore unwanted files and directories
+*.pyc
+__pycache__/
+*.log
+*.DS_Store
+*.env
